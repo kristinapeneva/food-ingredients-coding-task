@@ -1,0 +1,23 @@
+[
+    {
+        "id": 85738,
+        "name": "banana chips",
+        "image": "bananachips.jpg"
+    },
+    {
+        "id": 6435,
+        "name": "banana liqueur",
+        "image": "bananaliqueur.jpg"
+    },
+    {
+        "id": 643752,
+        "name": "peanut",
+        "image": "peanut.jpg"
+    },
+    {
+        "id": 6435,
+        "name": "walnut",
+        "image": "walnut.jpg"
+    }
+
+]
