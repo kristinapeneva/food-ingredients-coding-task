@@ -3,13 +3,19 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from 'react';
 import { Box, Flex, Text, Button, ButtonGroup, Input,
+
   FormControl,
   FormLabel,
   FormErrorMessage,
   FormHelperText,
-  InputRightAddon
+  InputRightAddon,
+  InputGroup,
+  InputLeftElement,
+  Container
 } from "@chakra-ui/react"
+import { Search2Icon, ArrowRightIcon} from '@chakra-ui/icons'
 import data from './api/post.json'
+import { transform } from 'framer-motion';
 
 export default function Home({results}) {
   const [ingredient, setIngredient] = useState(null);
@@ -36,53 +42,96 @@ const callAPI = async () => {
   // colors: brown: #985D06, #937661, black: #100D08, blue: #266A70, #1B484B, gray: #DDDBDA, #555551
   return (
     // Wrapper Box
-    <Box 
+    <Box
+    className='container'
       w="100vw"
-      h="100vh"
+      h="fit-content"
+      minH="100vh"
       m="0"
-      bgGradient="linear-gradient(to right top, #555551, #535a4f, #4a6053, #3b655f, #266a70);"
       color="#333333"
       display="flex"
-      alignItems="center"
-      justifyContent="center"
+      flexDirection="column"
+      
       >
 
-    {/* Inner box */}
+    {/* search box*/}
       <Box
-        p="50px"
-        bgColor="white"
-        w="60%"
-        h="80%"
-        borderRadius="40px"
-        display="flex">
-        <Box flexGrow="2"
-          >
+        p="20vh 15vw"
+        w="100vw"
+        h="70vh"
+        m="0"
+        c="#DDDBDA"
+        bgGradient='linear(to-t, #00C9B2, #1E6D64, #1B484B)'
+        display="flex"
+        flexDirection="column"
+        gap="60px">
+          <Text
+            color="white"
+            fontSize="6xl"
+            fontWeight="500"
+            
+            >Search for ingredients:</Text>
           <FormControl 
+          w="60vw"
+          minW="400px"
             onSubmit={(e) => {
               e.preventDefault(); e.stopPropagation()
-              }}
-              
+              }}              
           >
-            <FormLabel>
-              Ingredient Search
-            </FormLabel>
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap="40px">
+              <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Search2Icon></Search2Icon>}
+                color="white"
+                >
+
+                </InputLeftElement>
             <Input
+              
+              focusBorderColor="#ffaa87"
+              fontSize="3xl"
+              focus
+              color="white"
               type="text" 
-              placeholder='Enter ingredient name...'
+              variant="flushed"
+              w="100%"
+              maxW="600px"
+          
               onChange={(e) => {
                 setIngredient(e.target.value);
                 setResponse(null);
               }} 
             />
+            </InputGroup>
             <Button
+            w="fit-content"
+            maxW="300px"
+            color="#1B484B"
+            bgGradient="linear-gradient(to-t,#D27955, #ffaa87)"
+            h="fit-content"
+            fontSize="1xl"
+            p="15px 45px"
+            border="1px solid #ffaa87"
+            _hover={{ border: "1px solid white", transform: "scale(1.05)", color:"white"}}
+
               type='submit' onClick={() => callAPI()}>
-                Search
+                <ArrowRightIcon />
             </Button>
-          </FormControl>
-          <Box>
-            <Text>Results:</Text>
-          </Box>
-          </Box>
+            </Box>
+            </FormControl>
+        </Box>
+
+
+          <Box
+          >
+            <Box>
+              <Text>Results:</Text>
+            </Box>
+         
           <Box flexGrow="1">
             <Text>Search History</Text>
           </Box>
