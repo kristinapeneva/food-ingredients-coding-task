@@ -2,5 +2,5 @@
 
 .container {
   font-family: 'Poppins', sans-serif;
-  
+  overflow-y: hidden;
 }
