@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { inputValidation, isInDatabase, trimAndLowerCaseStr } from '../utils/utils';
 import { useMemo } from 'react';
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
@@ -19,42 +20,133 @@ import { Search2Icon, ArrowRightIcon} from '@chakra-ui/icons'
 import data from './api/post.json'
 import { transform } from 'framer-motion';
 
-export default function Home({results}) {
+export default function Home() {
   const [searchField, setsearchField] = useState(null);
   const [ingredient, setIngredient] = useState(null)
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const [errorState, setErrorState] = useState(false)
   const [searchHistory, setSearchHistory] = useState([])
+  const [fullHistory, setFullHistory] = useState([])
+
 
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
+  const handleSearchOnClick = () => {
+    setError(null);
+    setErrorState(false)
+    var inputWord = trimAndLowerCaseStr(searchField)
+
+    if(inputValidation(inputWord).isInvalid) {
+      setError(inputValidation(inputWord).errorMessage)
+      setErrorState(true)
+    } else if (isInDatabase(inputWord, fullHistory).isInDb) {
+      setResponse(isInDatabase(inputWord, fullHistory).response)
+    } else {
+      callAPI();
+    }
+  }
+
+  const handleSearchPrevSearches = (history) => {
+    setsearchField(history)
+    setResponse(isInDatabase(history, fullHistory).response)
+  }
+
+//   const handleFullHistory = (name) => {
+//       if (fullHistory) {
+//         for (let i = 0; i < fullHistory.length; i++ ) {
+//           if (fullHistory[i].name === name){
+//             return setResponse(fullHistory[i].response);
+//           } else {
+//             callAPI()
+//             if(!apiError) { 
+//               setFullHistory([...fullHistory, {name: {searchField}, response: {response}}])
+//             }
+//             setApiError(false)
+//           }
+//         }
+//       }
+//       return;
+//     }
+  
+
 const callAPI = async () => {
-    setIngredient(searchField);
+  setIngredient(searchField)
     try {
       const res = await fetch(
-        `https://api.spoonacular.com/food/searchFields/search?query=${ingredient}&apiKey=${apiKey}`
+        `https://api.spoonacular.com/food/ingredients/search?query=${ingredient}&apiKey=${apiKey}`
       );
       const data = await res.json();
-      setResponse(data.results)
-        console.log(data);
-        console.log(response);
+      setResponse(data.results);
+
+      // add new ui search history button
+      // if(searchHistory.length < 10) {
+      //   setSearchHistory([...searchHistory, ingredient])
+      // } else {
+      //   setSearchHistory([...searchHistory.slice(1), ingredient])
+      // }
+
+      // add response to full search history
+      // setFullHistory([...fullHistory, {name: ingredient, response: data.results}])
+
     } catch (e) {
-      setError(e);
+      console.log(e.message)
+      // setFullHistory([...fullHistory, {name: ingredient, response: null}])
     }
   }
 
+//   // const handleInputValidation = async () => {
+    
+//   //   let inputWord = searchField;
+//   //   inputWord.trim().toLowerCase;
+//   //   if (inputWord.length == 0) {
+//   //     setError("Please type an ingredient name")
+//   //   } else if (inputWord.length < 3) {
+//   //     setError("The ingredient name should consist of a minimum 3 characters")
+//   //   } else if()
+//   // }
 
-  const searchHistoryImplementation = () => {
-    if(searchHistory.length < 10) {
-      setSearchHistory([...searchHistory, searchField])
-    } else {
-      setSearchHistory([...searchHistory.slice(1),searchField])
-    }
-  }
+//   const isError = () => {
+//     let pattern = /^[a-z]*$/
+//     let enteredSearch = searchField;
+//     if (enteredSearch) {
+//       enteredSearch.trim().toLowerCase()
 
-  const handleSearchPrevSearches =(index) => {
-    setsearchField(searchHistory[index])
-  }
+//       if (enteredSearch == '' || enteredSearch == null) {
+//         setError("Enter an ingredient name")
+//         setErrorState(true)
+//       } else if (enteredSearch.length < 3) {
+//         setError("Enter minimum 3 characters")
+//         console.log("under 3")
+//         setErrorState(true)
+//       } else if (!enteredSearch.match(pattern)) {
+//         setError("Enter valid name")
+//         console.log("pattern")
+//         setErrorState(true)
+
+//       }
+      
+      
+//     // else {
+//     //   callAPI()
+//     // }
+//   }
+
+// return;
+//   }
+
+
+
+//   const searchHistoryImplementation = () => {
+//     if (errorState === false) {
+//       if(searchHistory.length < 10) {
+//         setSearchHistory([...searchHistory, searchField])
+//       } else {
+//         setSearchHistory([...searchHistory.slice(1),searchField])
+//       }
+//     }
+
+//   }
 
 
   // getting images
@@ -92,7 +184,7 @@ const callAPI = async () => {
             fontSize="6xl"
             fontWeight="500"
             
-            >Search for searchFields:</Text>
+            >Search for ingredient:</Text>
           <FormControl 
           w="60vw"
           minW="400px"
@@ -107,26 +199,30 @@ const callAPI = async () => {
               <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
-                children={<Search2Icon></Search2Icon>}
                 color="white"
                 >
-
+                  <Search2Icon />
                 </InputLeftElement>
             <Input
-              
+              minLength="3"
+              maxLength="20"
+              pattern="[A-Za-z]"
+              errorBorderColor='red'
               focusBorderColor="#FF8A44"
+              required
+              type="text"
               fontSize="3xl"
               color="white"
-              type="text" 
               variant="flushed"
               w="100%"
               maxW="600px"
-          
+              
               onChange={(e) => {
                 setsearchField(e.target.value);
               }} 
             />
             </InputGroup>
+            {errorState && <Text>{error}</Text>}
             <Button
             w="fit-content"
             maxW="300px"
@@ -138,7 +234,7 @@ const callAPI = async () => {
             border="2px solid #FF9D56"
             _hover={{ border: "2px solid white", transform: "scale(1.05)", color:"white"}}
 
-              type='submit' onClick={() => {searchHistoryImplementation()}} >
+              type='submit' onClick={() => callAPI()} >
                 <ArrowRightIcon />
             </Button>
             </Box>
@@ -183,7 +279,27 @@ const callAPI = async () => {
                 display="flex"
                 flexDirection="column"
             >             
-                <Box
+            {response === null ? (<Text>No Results</Text>) : response.map(x => {
+                  return (
+                    <Box 
+                    key={x.id}
+                    width="100%"
+                    display="flex"
+                    gap="20px"
+                    boxShadow="0px 0px 20px 7px #DDDBDA"
+                    m="10px 0px"
+                    borderRadius="15px"
+                    bg="white"
+                    padding="30px">
+                      <Image src={`https://spoonacular.com/cdn/ingredients_100x100/${x.image}`} width="100px" height="100px" alt={x.name}></Image>
+                      <Text fontSize="2xl" margin="auto 0" padding="10px" fontWeight="350" textColor="#1B484B">{x.name}</Text>                      
+                    </Box>
+                  )
+                }
+                  
+                )}
+            </Box>
+                {/* <Box
                     width="100%"
                     display="flex"
                     gap="20px"
@@ -193,7 +309,7 @@ const callAPI = async () => {
                     bg="white"
                     padding="30px"
                 >                    
-                    <Image src="https://spoonacular.com/cdn/searchFields_100x100/banana-chips.jpg" alt="banana chips" width="100px" height="100px"></Image>
+                    <Image src="https://spoonacular.com/cdn/ingredients_100x100/banana-chips.jpg" alt="banana chips" width="100px" height="100px"></Image>
                     <Text fontSize="2xl" margin="auto 0" padding="10px" fontWeight="350" textColor="#1B484B">Banana chips</Text>
                 </Box>
                 <Box
@@ -207,10 +323,10 @@ const callAPI = async () => {
                     bg="white"
                     padding="30px"
                 >                    
-                    <Image src="https://spoonacular.com/cdn/searchFields_100x100/banana-blossoms.jpg" alt="banana blossoms" width="100px" height="100px"></Image>
+                    <Image src="https://spoonacular.com/cdn/ingredients_100x100/banana-blossoms.jpg" alt="banana blossoms" width="100px" height="100px"></Image>
                     
                     <Text fontSize="2xl" margin="auto 0" padding="10px" fontWeight="350" textColor="#1B484B">Banana blossoms</Text>
-                </Box>     
+                </Box>      */}
             </Box>            
         </Box>
             {/* <Results /> */}
@@ -218,13 +334,13 @@ const callAPI = async () => {
               <Text>Search History</Text>
               <Box display="flex" flexDirection="row-reverse">
               {searchHistory && searchHistory.map((history,index) => {
-                return(<Button key={`history${index}`} onClick={() => handleSearchPrevSearches(index)}>{history}</Button>)
+                return(<Button key={`history${index}`} onClick={() => handleSearchPrevSearches(history)}>{history}</Button>)
               })}
               </Box>
             </Box>
         </Box>
-      </Box>
-
+      
+  
   )
 }
 
