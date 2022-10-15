@@ -14,142 +14,87 @@ import { Box, Flex, Text, Button, ButtonGroup, Input,
   InputRightAddon,
   InputGroup,
   InputLeftElement,
-  Container
+  Container,
+  scaleFadeConfig
 } from "@chakra-ui/react"
 import { Search2Icon, ArrowRightIcon} from '@chakra-ui/icons'
 import data from './api/post.json'
 import { transform } from 'framer-motion';
 
 export default function Home() {
-  const [searchField, setsearchField] = useState(null);
-  const [ingredient, setIngredient] = useState(null)
-  const [response, setResponse] = useState(null);
+  const [searchField, setSearchField] = useState("");
+  const [response, setResponse] = useState([]);
   const [error, setError] = useState(null);
   const [errorState, setErrorState] = useState(false)
   const [searchHistory, setSearchHistory] = useState([])
   const [fullHistory, setFullHistory] = useState([])
-
+  const [inputWordState, setInputWordState] = useState("");
 
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
+  if (inputWordState) {
+    console.log(inputWordState)
+    console.log(inputValidation(inputWordState).isInvalid)
+  }
+
+  const getNoResultMessage = () => {
+    if (searchHistory.length === 0) {
+      return null;
+    } else if(inputValidation(inputWordState).isInvalid) {
+        return (<Text>There are no results for invalid input.</Text>)
+    } else if (response && response.length === 0) {
+        return (<Text>No results. Try again.</Text>)
+      }
+    
+  }
+ 
   const handleSearchOnClick = () => {
     setError(null);
     setErrorState(false)
     var inputWord = trimAndLowerCaseStr(searchField)
+    setInputWordState(inputWord)
 
+    addSearchHistoryButton(inputWord)
     if(inputValidation(inputWord).isInvalid) {
       setError(inputValidation(inputWord).errorMessage)
       setErrorState(true)
     } else if (isInDatabase(inputWord, fullHistory).isInDb) {
-      setResponse(isInDatabase(inputWord, fullHistory).response)
+      setResponse(isInDatabase(inputWord, fullHistory).readyResponse)
     } else {
-      callAPI();
+      callAPI(inputWord);
     }
   }
 
   const handleSearchPrevSearches = (history) => {
-    setsearchField(history)
-    setResponse(isInDatabase(history, fullHistory).response)
+    setInputWordState(history)
+    setResponse(isInDatabase(history, fullHistory).readyResponse)
   }
 
-//   const handleFullHistory = (name) => {
-//       if (fullHistory) {
-//         for (let i = 0; i < fullHistory.length; i++ ) {
-//           if (fullHistory[i].name === name){
-//             return setResponse(fullHistory[i].response);
-//           } else {
-//             callAPI()
-//             if(!apiError) { 
-//               setFullHistory([...fullHistory, {name: {searchField}, response: {response}}])
-//             }
-//             setApiError(false)
-//           }
-//         }
-//       }
-//       return;
-//     }
-  
+  const addSearchHistoryButton = (str) => {
+    if(searchHistory.length < 10) {
+      setSearchHistory([str, ...searchHistory])
+    } else {
+      setSearchHistory([str, ...searchHistory.slice(0, 9)])
+    }
+  }
 
-const callAPI = async () => {
-  setIngredient(searchField)
+const callAPI = async (str) => {
     try {
       const res = await fetch(
-        `https://api.spoonacular.com/food/ingredients/search?query=${ingredient}&apiKey=${apiKey}`
+        `https://api.spoonacular.com/food/ingredients/search?query=${str}&apiKey=${apiKey}`
       );
       const data = await res.json();
       setResponse(data.results);
 
-      // add new ui search history button
-      // if(searchHistory.length < 10) {
-      //   setSearchHistory([...searchHistory, ingredient])
-      // } else {
-      //   setSearchHistory([...searchHistory.slice(1), ingredient])
-      // }
-
       // add response to full search history
-      // setFullHistory([...fullHistory, {name: ingredient, response: data.results}])
+      setFullHistory([...fullHistory, {name: str, response: data.results}])
 
     } catch (e) {
-      console.log(e.message)
-      // setFullHistory([...fullHistory, {name: ingredient, response: null}])
+      setFullHistory([...fullHistory, {name: str, response: []}])
+      setResponse([])
     }
   }
 
-//   // const handleInputValidation = async () => {
-    
-//   //   let inputWord = searchField;
-//   //   inputWord.trim().toLowerCase;
-//   //   if (inputWord.length == 0) {
-//   //     setError("Please type an ingredient name")
-//   //   } else if (inputWord.length < 3) {
-//   //     setError("The ingredient name should consist of a minimum 3 characters")
-//   //   } else if()
-//   // }
-
-//   const isError = () => {
-//     let pattern = /^[a-z]*$/
-//     let enteredSearch = searchField;
-//     if (enteredSearch) {
-//       enteredSearch.trim().toLowerCase()
-
-//       if (enteredSearch == '' || enteredSearch == null) {
-//         setError("Enter an ingredient name")
-//         setErrorState(true)
-//       } else if (enteredSearch.length < 3) {
-//         setError("Enter minimum 3 characters")
-//         console.log("under 3")
-//         setErrorState(true)
-//       } else if (!enteredSearch.match(pattern)) {
-//         setError("Enter valid name")
-//         console.log("pattern")
-//         setErrorState(true)
-
-//       }
-      
-      
-//     // else {
-//     //   callAPI()
-//     // }
-//   }
-
-// return;
-//   }
-
-
-
-//   const searchHistoryImplementation = () => {
-//     if (errorState === false) {
-//       if(searchHistory.length < 10) {
-//         setSearchHistory([...searchHistory, searchField])
-//       } else {
-//         setSearchHistory([...searchHistory.slice(1),searchField])
-//       }
-//     }
-
-//   }
-
-
-  // getting images
 
 
   // colors: brown: #985D06, #937661, black: #100D08, blue: #266A70, #1B484B, gray: #DDDBDA, #555551
@@ -184,7 +129,7 @@ const callAPI = async () => {
             fontSize="6xl"
             fontWeight="500"
             
-            >Search for ingredient:</Text>
+            >Search for an ingredient:</Text>
           <FormControl 
           w="60vw"
           minW="400px"
@@ -195,7 +140,7 @@ const callAPI = async () => {
             <Box
               display="flex"
               flexDirection="column"
-              gap="40px">
+              >
               <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
@@ -203,6 +148,7 @@ const callAPI = async () => {
                 >
                   <Search2Icon />
                 </InputLeftElement>
+        
             <Input
               minLength="3"
               maxLength="20"
@@ -218,11 +164,13 @@ const callAPI = async () => {
               maxW="600px"
               
               onChange={(e) => {
-                setsearchField(e.target.value);
+                setSearchField(e.target.value);
               }} 
             />
+            {errorState && <Text color="red">{error}</Text>}
+              
             </InputGroup>
-            {errorState && <Text>{error}</Text>}
+            
             <Button
             w="fit-content"
             maxW="300px"
@@ -234,7 +182,7 @@ const callAPI = async () => {
             border="2px solid #FF9D56"
             _hover={{ border: "2px solid white", transform: "scale(1.05)", color:"white"}}
 
-              type='submit' onClick={() => callAPI()} >
+              type='submit' onClick={() => handleSearchOnClick()} >
                 <ArrowRightIcon />
             </Button>
             </Box>
@@ -243,25 +191,35 @@ const callAPI = async () => {
 
 
           <Box
-                  p="10vh 10vw 10vh 15vw"
+                  p="5vh 10vw 10vh 15vw"
                   m="0"
                   width="100%"
                   bgColor="#fbfbfb"
-                  
+                  display="flex"
+                  flexDirection="column"
+                  gap="40px"
           >
-            {/* <Box>
-              <Text>Results:</Text>
-                {response && response.map(x => {
-                  return (
-                    <Box key={x.id}>
-                      <Text>{x.name}</Text>
-                      <Image src={`https://spoonacular.com/cdn/searchFields_100x100/${x.image}`} width="100px" height="100px"></Image>
-                    </Box>
-                  )
-                }
-                  
-                )}
-            </Box> */}
+            {/* <Results /> */}
+            <Box width ="100%">
+              <Text p="15px 0" fontSize="2xl">Search history:</Text>
+              <Box display="flex" gap="10px" flexWrap="wrap" width="100%">
+              {searchHistory && searchHistory.map((history,index) => {
+                return(
+                <Button
+                  p="0 20px"
+                  size="sm"
+                  variant="outline"
+                  fontSize="1xl"
+                  color="#1B484B"
+                  borderColor="#1B484B"
+                  _hover={{borderColor: "#FF9D56", color: "#FF9D56", transform: "scale(1.05)"}}
+                  _active={{bg: "#FF9D56", color: "white", transform: "scale(0.98)"}}
+                  key={`history${index}`} onClick={() => handleSearchPrevSearches(history)}>
+                    {history}
+                    </Button>)
+              })}
+              </Box>
+            </Box>
 
 <Box
         width="60%"
@@ -272,14 +230,14 @@ const callAPI = async () => {
                 fontSize="4xl"
                 fontWeight="700"
                 textColor="#FF8A44"
-                >Results:</Text>
+                >Results{inputWordState && ` for ${inputWordState}:`}</Text>
             <Box
                 width="100%"
                 height="fit-content"
                 display="flex"
                 flexDirection="column"
             >             
-            {response === null ? (<Text>No Results</Text>) : response.map(x => {
+            {(response && response.length > 0) ? response.map(x => {
                   return (
                     <Box 
                     key={x.id}
@@ -295,9 +253,8 @@ const callAPI = async () => {
                       <Text fontSize="2xl" margin="auto 0" padding="10px" fontWeight="350" textColor="#1B484B">{x.name}</Text>                      
                     </Box>
                   )
-                }
-                  
-                )}
+                }) : getNoResultMessage()}
+                
             </Box>
                 {/* <Box
                     width="100%"
@@ -329,15 +286,7 @@ const callAPI = async () => {
                 </Box>      */}
             </Box>            
         </Box>
-            {/* <Results /> */}
-            <Box width ="100%" >
-              <Text>Search History</Text>
-              <Box display="flex" flexDirection="row-reverse">
-              {searchHistory && searchHistory.map((history,index) => {
-                return(<Button key={`history${index}`} onClick={() => handleSearchPrevSearches(history)}>{history}</Button>)
-              })}
-              </Box>
-            </Box>
+            
         </Box>
       
   

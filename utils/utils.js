@@ -28,7 +28,7 @@ export const isInDatabase = (str, dbWithResults) => {
         dbWithResults.forEach(element => {
             if(element.name === str) {
                 readyResponse = element.response;
-                isInDatabase = true;
+                isInDb = true;
             }
         });
     }    
