@@ -14,8 +14,15 @@ const ResultsAndHistoryBox = ({ getNoResultMessage, inputWordState, response, se
                 flexDirection="column"
                 gap="40px"
             >
-                <History searchHistory={searchHistory} handleSearchPrevSearches={handleSearchPrevSearches} />
-                <Results getNoResultMessage={getNoResultMessage} inputWordState={inputWordState} response={response} />
+                <History
+                    searchHistory={ searchHistory }
+                    handleSearchPrevSearches={ handleSearchPrevSearches }
+                />
+                <Results
+                    getNoResultMessage={ getNoResultMessage }
+                    inputWordState={ inputWordState }
+                    response={ response }
+                />
             </Box>
         </>
     )

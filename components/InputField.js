@@ -1,7 +1,7 @@
 import { Box, InputGroup, InputLeftElement, Input, Text } from "@chakra-ui/react";
 import { Search2Icon } from '@chakra-ui/icons' 
 
-const InputField = ({errorState, error, setSearchField}) => {
+const InputField = ({ errorState, error, setSearchField }) => {
     return (
         <>
             <Box
@@ -32,7 +32,7 @@ const InputField = ({errorState, error, setSearchField}) => {
                             setSearchField(e.target.value);
                         }} 
                     />
-                    {errorState && <Text color="red">{error}</Text>}
+                    {errorState && <Text color="red">{ error }</Text>}
                 </InputGroup>
             </Box>
         </>

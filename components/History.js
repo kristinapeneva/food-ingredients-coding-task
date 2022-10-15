@@ -39,7 +39,7 @@ const History = ({ searchHistory, handleSearchPrevSearches }) => {
                                 }}
                                 key={`history${index}`} onClick={() => handleSearchPrevSearches(history)}
                             >
-                                {history}
+                                { history }
                             </Button>)
                         })}
                 </Box>

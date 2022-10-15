@@ -14,7 +14,7 @@ const Results = ({ getNoResultMessage, inputWordState, response }) => {
                     fontWeight="700"
                     textColor="#FF8A44"
                 >
-                    Results{inputWordState && ` for ${inputWordState}:`}
+                    Results{inputWordState && ` for ${ inputWordState }:`}
                 </Text>
                 <Box
                     width="100%"
@@ -36,7 +36,7 @@ const Results = ({ getNoResultMessage, inputWordState, response }) => {
                                 padding="30px"
                             >
                             <Image
-                                src={`https://spoonacular.com/cdn/ingredients_100x100/${x.image}`}
+                                src={`https://spoonacular.com/cdn/ingredients_100x100/${ x.image }`}
                                 width="100px"
                                 height="100px"
                                 alt={x.name}

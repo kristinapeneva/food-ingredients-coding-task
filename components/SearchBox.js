@@ -2,7 +2,7 @@ import { Box, Text, FormControl } from "@chakra-ui/react";
 import InputField from "./InputField";
 import SearchButton from "./SearchButton";
 
-const SearchBox = ({errorState, error, setSearchField, handleSearchOnClick}) => {
+const SearchBox = ({ errorState, error, setSearchField, handleSearchOnClick }) => {
     return (
         <>
             <Box
@@ -27,11 +27,15 @@ const SearchBox = ({errorState, error, setSearchField, handleSearchOnClick}) => 
                     w="60vw"
                     minW="400px"
                     onSubmit={(e) => {
-                        e.preventDefault(); e.stopPropagation()
+                        e.preventDefault(); e.stopPropagation();
                     }}              
                 >
-                    <InputField error={error} errorState={errorState} setSearchField={setSearchField}/>
-                    <SearchButton handleSearchOnClick={handleSearchOnClick}/>
+                    <InputField
+                        error={ error }
+                        errorState={ errorState }
+                        setSearchField={ setSearchField }
+                    />
+                    <SearchButton handleSearchOnClick={ handleSearchOnClick } />
                 </FormControl>
             </Box>
         </>

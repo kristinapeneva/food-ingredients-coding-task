@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
 
-const SearchButton = ({handleSearchOnClick}) => {
+const SearchButton = ({ handleSearchOnClick }) => {
     return(
         <>
             <Button

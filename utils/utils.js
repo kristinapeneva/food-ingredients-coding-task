@@ -1,19 +1,19 @@
 export const trimAndLowerCaseStr = (str) => {
-    return str.trim().toLowerCase()
+    return str.trim().toLowerCase();
 }
 
 export const inputValidation = (str) => {
-    let pattern = /^[a-z]*$/
+    let pattern = /^[a-z]*$/;
     let errorMessage = null;
     let isInvalid = false;
-      str.trim().toLowerCase()
-      if (str == '' || str == null) {
+    str.trim().toLowerCase();
+    if (str == '' || str == null) {
         errorMessage = "Enter an ingredient name";
         isInvalid = true;
-      } else if (str.length < 3) {
+    } else if (str.length < 3) {
         errorMessage="Enter minimum 3 characters";
         isInvalid = true;
-      } else if (!str.match(pattern)) {
+    } else if (!str.match(pattern)) {
         errorMessage="Enter valid name";
         isInvalid = true;
     }
@@ -23,7 +23,7 @@ export const inputValidation = (str) => {
 export const isInDatabase = (str, dbWithResults) => {
     let isInDb = false;
     let readyResponse = null;
-    str.trim().toLowerCase()
+    str.trim().toLowerCase();
     if (dbWithResults) {
         dbWithResults.forEach(element => {
             if(element.name === str) {
@@ -34,7 +34,3 @@ export const isInDatabase = (str, dbWithResults) => {
     }    
     return { isInDb, readyResponse };
 }
-
-
-
-
