@@ -4,37 +4,41 @@ import { Search2Icon } from '@chakra-ui/icons'
 const InputField = ({ errorState, error, setSearchField }) => {
     return (
         <>
-            <Box
+            <InputGroup
                 display="flex"
                 flexDirection="column"
-            >
-                <InputGroup>
-                    <InputLeftElement
-                        pointerEvents="none"
-                        color="white"
-                    >
-                        <Search2Icon />
-                    </InputLeftElement>        
+                minH="4.5rem"
+            >                    
+                <InputLeftElement
+                    pointerEvents="none"
+                    color="#FFFFFF"
+                >
+                    <Search2Icon />
+                </InputLeftElement>        
                     <Input
+                        w="50vw"
+                        minW="300px"
                         minLength="3"
                         maxLength="20"
-                        pattern="[A-Za-z]"
-                        errorBorderColor='red'
                         focusBorderColor="#FF8A44"
-                        required
                         type="text"
-                        fontSize="3xl"
-                        color="white"
-                        variant="flushed"
-                        w="100%"
-                        maxW="600px"              
+                        fontSize="1.5rem"
+                        color="#FFFFFF"
+                        fontWeight="300"
+                        variant="flushed"        
                         onChange={(e) => {
                             setSearchField(e.target.value);
                         }} 
-                    />
-                    {errorState && <Text color="red">{ error }</Text>}
-                </InputGroup>
-            </Box>
+                    />                    
+                {errorState && <Text 
+                    color="#F06872"
+                    fontWeight="450"
+                    textShadow="2px 2px 5px #1B484B"
+                    >
+                        { error }
+                    </Text>
+                }
+            </InputGroup>
         </>
     )
 }

@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import "@fontsource/poppins"
 import { ChakraProvider } from '@chakra-ui/react'
 import '../styles/globals.css'
 
@@ -7,7 +8,6 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         Food ingreadients search
-        <link rel='icon' href="/favicon.ico" />
       </Head>
     
         <ChakraProvider>

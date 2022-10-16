@@ -1,4 +1,4 @@
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, Flex } from "@chakra-ui/react";
 
 const History = ({ searchHistory, handleSearchPrevSearches }) => {
     return (
@@ -7,34 +7,35 @@ const History = ({ searchHistory, handleSearchPrevSearches }) => {
                 width ="100%"
             >
                 <Text 
-                    p="15px 0" 
-                    fontSize="2xl"
+                    p="1rem 0" 
+                    fontSize="1.5rem"
+                    fontWeight="450"
                 >
                     Search history:
                 </Text>
-                <Box 
-                    display="flex" 
-                    gap="10px" 
+                <Flex
+                    gap="0.5rem" 
                     flexWrap="wrap" 
-                    width="100%"
                 >
                     {searchHistory && searchHistory.map((history,index) => {
                         return (
                             <Button
-                                p="0 20px"
-                                size="sm"
-                                variant="outline"
-                                fontSize="1xl"
-                                color="#1B484B"
-                                borderColor="#1B484B"
+                                fontSize="1rem"
+                                fontWeight="450"
+                                p="0.25rem 1.5rem"                                
+                                color="#FFFFFF"
+                                border="2px solid #4a8a83"
+                                bgGradient='linear(to-b, #347b73, #1E6D64)'
+                                boxShadow="0px 0px 5px 1px #b0afae"
                                 _hover={{
                                     borderColor: "#FF9D56",
                                     color: "#FF9D56",
-                                    transform: "scale(1.05)"
+                                    transform: "scale(1.05)",
+                                    background: "#FFFFFF"
                                 }}
                                 _active={{
                                     bg: "#FF9D56",
-                                    color: "white",
+                                    color: "#FFFFFF",
                                     transform: "scale(0.98)"
                                 }}
                                 key={`history${index}`} onClick={() => handleSearchPrevSearches(history)}
@@ -42,7 +43,7 @@ const History = ({ searchHistory, handleSearchPrevSearches }) => {
                                 { history }
                             </Button>)
                         })}
-                </Box>
+                </Flex>
             </Box>
         </>
     )

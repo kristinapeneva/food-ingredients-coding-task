@@ -1,18 +1,16 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import History from "./History";
 import Results from "./results";
 
 const ResultsAndHistoryBox = ({ getNoResultMessage, inputWordState, response, searchHistory, handleSearchPrevSearches }) => {
     return (
         <>
-            <Box
-                p="5vh 10vw 10vh 15vw"
-                m="0"
+            <Flex
                 width="100%"
-                bgColor="#fbfbfb"
-                display="flex"
                 flexDirection="column"
-                gap="40px"
+                gap="2rem"
+                p="5vh 10vw 10vh 15vw"                
+                bgColor="#FBFBFB"                
             >
                 <History
                     searchHistory={ searchHistory }
@@ -23,7 +21,7 @@ const ResultsAndHistoryBox = ({ getNoResultMessage, inputWordState, response, se
                     inputWordState={ inputWordState }
                     response={ response }
                 />
-            </Box>
+            </Flex>
         </>
     )
 }

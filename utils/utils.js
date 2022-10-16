@@ -8,13 +8,13 @@ export const inputValidation = (str) => {
     let isInvalid = false;
     str.trim().toLowerCase();
     if (str == '' || str == null) {
-        errorMessage = "Enter an ingredient name";
+        errorMessage = "Enter an ingredient name.";
         isInvalid = true;
     } else if (str.length < 3) {
-        errorMessage="Enter minimum 3 characters";
+        errorMessage="Enter minimum 3 characters.";
         isInvalid = true;
     } else if (!str.match(pattern)) {
-        errorMessage="Enter valid name";
+        errorMessage="Enter a valid ingredient name.";
         isInvalid = true;
     }
     return { isInvalid, errorMessage };

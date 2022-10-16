@@ -1,4 +1,5 @@
 import { inputValidation, isInDatabase, trimAndLowerCaseStr } from '../utils/utils';
+import "@fontsource/poppins";
 import ResultsAndHistoryBox from '../components/ResultsAndHistoryBox';
 import SearchBox from '../components/SearchBox';
 import styles from '../styles/Home.module.css'
@@ -100,3 +101,5 @@ const callAPI = async (str) => {
     </>
   ) ;
 }
+
+

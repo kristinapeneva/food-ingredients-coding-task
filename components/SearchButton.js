@@ -5,15 +5,22 @@ const SearchButton = ({ handleSearchOnClick }) => {
     return(
         <>
             <Button
-                w="fit-content"
-                maxW="300px"
-                color="#1B484B"
-                bgGradient="linear-gradient(to-t,#FF8A44, #FF9D56)"
-                h="fit-content"
-                fontSize="1xl"
-                p="15px 45px"
+                p="1rem 2rem"
+                color="#1B484B"                
+                fontSize="1rem"
+                bgGradient="linear-gradient(to-t,#FF8A44, #FF9D56)"                
                 border="2px solid #FF9D56"
-                _hover={{ border: "2px solid white", transform: "scale(1.05)", color:"white"}}
+                boxShadow="0px 0px 20px 7px #1B484B"
+                _hover={{ 
+                    border: "2px solid #FFFFFF",
+                    transform: "scale(1.05)",
+                    color:"#FFFFFF"
+                }}
+                _active={{
+                    border: "2px solid #FF8A44",
+                    transform: "scale(0.98)",
+                    color: "#FF8A44"
+                }}
                 type='submit' onClick={() => handleSearchOnClick()}
             >
                 <ArrowRightIcon />
