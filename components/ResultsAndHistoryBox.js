@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import History from "./History";
-import Results from "./results";
+import Results from "./Results";
 
 const ResultsAndHistoryBox = ({ getNoResultMessage, inputWordState, response, searchHistory, handleSearchPrevSearches }) => {
     return (
